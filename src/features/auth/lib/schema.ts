@@ -1,0 +1,46 @@
+import { z } from 'zod';
+
+export const usernameSchema = z
+  .string()
+  .trim()
+  .min(4, '아이디는 4자 이상이어야 합니다.')
+  .max(20, '아이디는 20자 이하여야 합니다.')
+  .regex(
+    /^[a-zA-Z0-9_]+$/,
+    '아이디는 영문, 숫자, 밑줄만 사용할 수 있습니다.',
+  );
+
+export const passwordSchema = z
+  .string()
+  .min(8, '비밀번호는 8자 이상이어야 합니다.')
+  .max(72, '비밀번호는 72자 이하여야 합니다.');
+
+export const loginSchema = z.object({
+  username: z.string().trim().min(1, '아이디를 입력해 주세요.'),
+  password: z.string().min(1, '비밀번호를 입력해 주세요.'),
+});
+
+export const signupSchema = z
+  .object({
+    username: usernameSchema,
+    password: passwordSchema,
+    passwordConfirm: z.string().min(1, '비밀번호 확인을 입력해 주세요.'),
+    agreedToTerms: z.boolean().refine((value) => value, {
+      message: '약관에 동의해 주세요.',
+    }),
+  })
+  .refine((value) => value.password === value.passwordConfirm, {
+    message: '비밀번호가 일치하지 않습니다.',
+    path: ['passwordConfirm'],
+  });
+
+export const signupRequestSchema = z.object({
+  username: usernameSchema,
+  password: passwordSchema,
+  agreedToTerms: z.literal(true, {
+    errorMap: () => ({ message: '약관에 동의해 주세요.' }),
+  }),
+});
+
+export type LoginValues = z.infer<typeof loginSchema>;
+export type SignupValues = z.infer<typeof signupSchema>;

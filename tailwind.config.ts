@@ -47,6 +47,13 @@ const config = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        rose: {
+          500: '#FF385C',
+          600: '#E00B41',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-geist-sans)', 'sans-serif'],
       },
       borderRadius: {
         lg: 'var(--radius)',
